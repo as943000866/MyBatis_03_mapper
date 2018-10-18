@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lmg.mybatis.dao.EmployeeMapperPlus">
+	<!-- 
+		自定义某个javaBean的封装规则
+		type: 自定义规则的 Java 类型
+		id: 唯一id方便引用
+	 -->
+	<resultMap type="com.lmg.mybatis.bean.Employee" id="MySimplEmp">
+		<!-- 指定主键列的封装规则
+		id 定义主键会底层有优化
+		column: 指定哪一列
+		property: 指定对应的 javaBean 属性-->
+		<id column="id" property="id"/>
+		<!-- 定义普通列封装规则 -->
+		<result column="last_name" property="lastName"/>
+		<!-- 其他不指定的列会自动封装: 我们只要写 resultMap 就把全部的映射规则都写上. -->
+		<result column="email" property="email"/>
+		<result column="gender" property="gender"/>
+	</resultMap>
+	<!-- public Employee getEmpById(Integer id); -->
+	<select id="getEmpById" resultMap="MySimplEmp">
+		select * from tbl_employee where id = #{id}
+	</select>
+	
+	<!-- 
+	场景一:
+		查询Employee 的同时查询员工对应的部门
+		Employee====Department
+		一个员工有与之对应的部门信息
+		id last_name gender d_id did dept_name (private Department dept;)
+	 -->
+	 <resultMap type="com.lmg.mybatis.bean.Employee" id="MyDifEmp">
+	 	<id column="id" property="id"/>
+	 	<result column="last_name" property="lastName"/>
+	 	<result column="gender" property="gender"/>
+	 	<result column="did" property="dept.id"/>
+	 	<result column="dept_name" property="dept.departmentName"/>
+	 </resultMap>
+	 <!-- public Employee getEmpAndDept(Integer id); -->
+	 <select id="getEmpAndDept" resultMap="MyDifEmp">
+	 	SELECT e.id id,e.last_name last_name,e.gender gender,e.d_id d_id,
+		d.id did,d.dept_name dept_name FROM tbl_employee e,tbl_dept d
+		WHERE e.d_id=d.id AND e.id=#{id}
+	 </select>
+</mapper>
