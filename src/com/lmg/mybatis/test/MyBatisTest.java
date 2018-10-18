@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import com.lmg.mybatis.bean.Department;
 import com.lmg.mybatis.bean.Employee;
+import com.lmg.mybatis.dao.DepartmentMapper;
 import com.lmg.mybatis.dao.EmployeeMapper;
 import com.lmg.mybatis.dao.EmployeeMapperAnnotation;
 import com.lmg.mybatis.dao.EmployeeMapperPlus;
@@ -189,11 +190,33 @@ public class MyBatisTest {
 			EmployeeMapperPlus mapper = openSession.getMapper(EmployeeMapperPlus.class);
 			/*Employee employee = mapper.getEmpById(2);
 			System.out.println(employee);*/
-			Employee employee = mapper.getEmpAndDept(2);
+			/*Employee employee = mapper.getEmpAndDept(2);
 			Department dept = employee.getDept();
 			System.out.println(employee);
+			System.out.println(dept);*/
+			Employee employee = mapper.getEmpByIdStep(1);
+			System.out.println(employee.getLastName());
+			Department dept = employee.getDept();
 			System.out.println(dept);
+			
 		}finally{
+			openSession.close();
+		}
+	}
+	@Test
+	public void test06() throws IOException{
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		SqlSession openSession = sqlSessionFactory.openSession();
+		
+		try {
+			DepartmentMapper mapper = openSession.getMapper(DepartmentMapper.class);
+			/*Department department = mapper.getDeptByIdPlus(1);
+			System.out.println(department);
+			System.out.println(department.getEmps());*/
+			Department department = mapper.getDeptByIdStep(1);
+			System.out.println(department.getDepartmentName());
+			System.out.println(department.getEmps());
+		} finally {
 			openSession.close();
 		}
 	}

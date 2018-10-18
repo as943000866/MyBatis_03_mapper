@@ -31,4 +31,5 @@ public interface EmployeeMapper {
 	public Boolean updateEmp(Employee employee);
 	
 	public void deleteEmpById(Integer id);
+	
 }
